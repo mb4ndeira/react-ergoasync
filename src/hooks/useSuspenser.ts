@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import ReadablePromise from "./ReadablePromise";
+import ReadablePromise from "../utils/ReadablePromise";
 
 const useSuspenser = (): [
   suspenser: ReadablePromise<void>,
