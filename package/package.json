@@ -1,0 +1,12 @@
+{
+  "name": "react-ergoasync",
+  "description": "React library for ergonomic data fetching with concurrent APIs.",
+  "version": "0.1.0",
+  "main": "index.js",
+  "repository": "https://github.com/mb4ndeira/react-wait",
+  "author": "mb4ndeira",
+  "license": "MIT",
+  "devDependencies": {
+    "react": "^18.0.0"
+  }
+}
