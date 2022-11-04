@@ -1,6 +1,8 @@
 import { useState, useMemo, useEffect } from "react";
 
-import ReadablePromise, { ReadablePromiseExecutor } from "./ReadablePromise";
+import ReadablePromise, {
+  ReadablePromiseExecutor,
+} from "../utils/ReadablePromise";
 
 const useAwait = <T>(
   thenable: ReadablePromiseExecutor<T>,
