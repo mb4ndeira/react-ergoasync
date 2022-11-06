@@ -1,25 +1,22 @@
 export type ReadableResults<Expected> = Promise<void> | Error | Expected;
 
-export type ReadablePromiseExecutor<T> = (
-  resolve: (value: T | PromiseLike<T>) => void
-) => Promise<T> | T;
+export type ReadablePromiseExecutor<T> = (() => Promise<T> | T) | Promise<T>;
 
 class ReadablePromise<T> extends Promise<T> {
   private result: Error | T | null = null;
 
-  constructor(executor: ReadablePromiseExecutor<T>) {
-    super((resolve, reject) =>
-      new Promise<T>(executor).then(
-        (result) => {
-          this.result = result;
-          resolve(result);
-        },
-        (error: Error) => {
-          this.result = error;
-          reject(error);
-        }
-      )
-    );
+  constructor(thenable: ReadablePromiseExecutor<T>) {
+    super(async (resolve, reject) => {
+      try {
+        const result =
+          thenable instanceof Promise ? await thenable : await thenable();
+        this.result = result;
+        resolve(result);
+      } catch (error) {
+        this.result = error as Error;
+        reject(error);
+      }
+    });
   }
 
   public read = (): ReadableResults<T> => {

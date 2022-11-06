@@ -1,3 +1,7 @@
 import ReadablePromise from "../utils/ReadablePromise";
-declare const useSuspenser: () => [suspenser: ReadablePromise<void>, unsuspend: () => void];
+declare type FakeSuspenser = {
+    read: () => Promise<void>;
+};
+declare type Suspenser = ReadablePromise<void> | FakeSuspenser;
+declare const useSuspenser: () => [suspenser: Suspenser, unsuspend: () => void];
 export default useSuspenser;
