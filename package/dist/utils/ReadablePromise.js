@@ -11,6 +11,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 class ReadablePromise {
     constructor(executor) {
+        this.then = (onFulfilled) => {
+            this.thenable.then(onFulfilled);
+            return this;
+        };
         this.read = () => {
             if (this.result instanceof Promise)
                 throw this.result;
@@ -18,14 +22,15 @@ class ReadablePromise {
                 throw this.result;
             return this.result;
         };
-        this.result = new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+        this.thenable = new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
             try {
                 resolve(yield executor());
             }
             catch (err) {
                 reject(err);
             }
-        })).then((result) => (this.result = result), (error) => (this.result = error));
+        }));
+        this.result = this.thenable.then((result) => (this.result = result), (error) => (this.result = error));
     }
 }
 exports.default = ReadablePromise;
