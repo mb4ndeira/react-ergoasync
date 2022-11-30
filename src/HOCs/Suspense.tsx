@@ -5,9 +5,18 @@ import React, {
 
 import ReadablePromise from "../utils/ReadablePromise";
 
+import ErrorBoundary from "./ErrorBoundary";
+
 type Cause =
   | (() => Promise<unknown | void | Error> | unknown | Error)
   | ReadablePromise<unknown>;
+
+interface ISuspenseProps {
+  cause?: Cause | Cause[];
+  loading: React.ReactNode;
+  fallback?: React.ReactNode;
+  children: React.ReactNode;
+}
 
 const Reader: React.FC<{
   promises: Cause[];
@@ -20,20 +29,33 @@ const Reader: React.FC<{
   return <>{children}</>;
 };
 
-const Suspense: React.FC<
-  {
-    cause?: ReadablePromise<unknown> | ReadablePromise<unknown>[];
-    children: React.ReactNode;
-  } & IReactSuspenseProps
-> = ({ cause = [], children, ...rest }) => {
+const Suspense: React.FC<ISuspenseProps & IReactSuspenseProps> = ({
+  cause = [],
+  loading,
+  fallback = null,
+  children,
+  ...rest
+}) => {
   if (!(cause instanceof Array)) cause = [cause];
 
-  if (cause.length == 0) return <ReactSuspense {...rest} children={children} />;
+  const FilledSuspense = ({ children }: { children: React.ReactNode }) => (
+    <ReactSuspense {...rest} fallback={loading} children={children} />
+  );
+
+  const SuspenseWithBoundary: React.FC<{
+    children: React.ReactNode;
+  }> = ({ children }) => (
+    <ErrorBoundary fallback={fallback}>
+      <FilledSuspense children={children} />
+    </ErrorBoundary>
+  );
+
+  if (cause.length == 0) return <SuspenseWithBoundary children={children} />;
 
   return (
-    <ReactSuspense {...rest}>
+    <SuspenseWithBoundary>
       <Reader promises={cause} children={children} />
-    </ReactSuspense>
+    </SuspenseWithBoundary>
   );
 };
 
