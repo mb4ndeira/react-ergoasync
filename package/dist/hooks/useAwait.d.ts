@@ -1,3 +1,5 @@
-import ReadablePromise, { ReadablePromiseExecutor } from "../utils/ReadablePromise";
-declare const useAwait: <T>(thenable: ReadablePromiseExecutor<T>, callback?: () => void) => ReadablePromise<void | T>;
-export default useAwait;
+import ReadablePromise from "../utils/ReadablePromise";
+declare const useAsync: <T>(executor: () => T | Promise<T>, configs?: {
+    suspend: boolean;
+}) => [() => Error | Promise<void> | T, (solvedValue: T) => void];
+export default useAsync;

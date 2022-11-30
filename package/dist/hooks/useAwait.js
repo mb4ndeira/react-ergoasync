@@ -5,19 +5,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = require("react");
 const ReadablePromise_1 = __importDefault(require("../utils/ReadablePromise"));
-const useAwait = (thenable, callback) => {
-    const [suspenser, setSuspenser] = (0, react_1.useState)(new ReadablePromise_1.default(() => { }));
-    const promise = (0, react_1.useMemo)(() => new ReadablePromise_1.default(thenable), []);
-    (0, react_1.useEffect)(() => {
-        promise.then(() => {
-            if (callback)
-                callback();
-            unsuspend();
-        });
-    }, []);
-    const unsuspend = () => {
-        setSuspenser(promise);
+class Suspenser {
+    constructor() {
+        this.read = () => {
+            throw new Promise(() => { });
+        };
+    }
+}
+const useAsync = (executor, configs = { suspend: false }) => {
+    const promise = (0, react_1.useMemo)(() => new ReadablePromise_1.default(executor), []);
+    const [reader, setReader] = (0, react_1.useState)(configs.suspend === true ? new Suspenser() : promise);
+    const resolver = (solvedValue) => {
+        setReader(new ReadablePromise_1.default(() => solvedValue));
     };
-    return suspenser;
+    return [() => reader.read(), resolver];
 };
-exports.default = useAwait;
+exports.default = useAsync;
