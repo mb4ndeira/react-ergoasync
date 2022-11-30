@@ -1,11 +1,21 @@
-import React, { SuspenseProps, Suspense as ReactSuspense } from "react";
+import React, {
+  SuspenseProps as IReactSuspenseProps,
+  Suspense as ReactSuspense,
+} from "react";
+
 import ReadablePromise from "../utils/ReadablePromise";
 
+type Cause =
+  | (() => Promise<unknown | void | Error> | unknown | Error)
+  | ReadablePromise<unknown>;
+
 const Reader: React.FC<{
-  promises: ReadablePromise<unknown>[];
+  promises: Cause[];
   children: React.ReactNode;
 }> = ({ promises, children }) => {
-  promises.forEach((promise) => promise.read());
+  promises.forEach((promise) =>
+    promise instanceof ReadablePromise ? promise.read() : promise()
+  );
 
   return <>{children}</>;
 };
@@ -14,7 +24,7 @@ const Suspense: React.FC<
   {
     cause?: ReadablePromise<unknown> | ReadablePromise<unknown>[];
     children: React.ReactNode;
-  } & SuspenseProps
+  } & IReactSuspenseProps
 > = ({ cause = [], children, ...rest }) => {
   if (!(cause instanceof Array)) cause = [cause];
 

@@ -10,11 +10,15 @@ var __rest = (this && this.__rest) || function (s, e) {
         }
     return t;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const jsx_runtime_1 = require("react/jsx-runtime");
 const react_1 = require("react");
+const ReadablePromise_1 = __importDefault(require("../utils/ReadablePromise"));
 const Reader = ({ promises, children }) => {
-    promises.forEach((promise) => promise.read());
+    promises.forEach((promise) => promise instanceof ReadablePromise_1.default ? promise.read() : promise());
     return (0, jsx_runtime_1.jsx)(jsx_runtime_1.Fragment, { children: children });
 };
 const Suspense = (_a) => {
