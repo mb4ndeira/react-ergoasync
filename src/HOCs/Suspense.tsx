@@ -29,6 +29,9 @@ const Reader: React.FC<{
   return <>{children}</>;
 };
 
+/**
+ * Custom React.Suspense component that provides error boundary functionality, and a way to declare it's children suspenders on itself.
+ */
 const Suspense: React.FC<ISuspenseProps & IReactSuspenseProps> = ({
   cause = [],
   loading,

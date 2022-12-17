@@ -1,3 +1,10 @@
+/**
+ * Represents an ongoing promise that is readable by React components.
+ *
+ * This class provides a `read` method for suspending React components until the promise is resolved.
+ *
+ * @param executor - a function that returns a value or promise.
+ */
 class ReadablePromise<T> {
   private result: Promise<T | void | Error> | T | Error;
   private thenable: Promise<T>;

@@ -1,7 +1,7 @@
 {
   "name": "react-ergoasync",
   "description": "React library for ergonomic data fetching with concurrent APIs.",
-  "version": "0.3.0",
+  "version": "0.3.2",
   "main": "dist/index.js",
   "repository": "https://github.com/mb4ndeira/react-ergoasync",
   "author": "mb4ndeira",
